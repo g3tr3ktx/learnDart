@@ -1,0 +1,28 @@
+class myLol extends Request{
+  final String method;
+  final Uri uri;
+
+  myLol(this.method, this.uri) : super(method, uri); 
+  
+}
+
+class UserAgentClient extends http.BaseClient {
+  final String userAgent;
+  final http.Client _inner;
+
+  UserAgentClient(this.userAgent, this._inner);
+
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['user-agent'] = userAgent;
+    print("Lol");
+    return _inner.send(request);
+  }
+}
+
+then #3
+
+ http.Client client = http.Client();
+               http.Client myClient =  UserAgentClient("", client);
+            var response = await myClient.send(myLol('GET', Uri.parse('https://jsonplaceholder.typicode.com/todos/1')));
+
+            print(response.request.url);
