@@ -18,3 +18,25 @@ Future<StreamedResponse> send() async {
     rethrow;
   }
 }
+
+#2
+
+class UserAgentClient extends http.BaseClient {
+  final String userAgent;
+  final http.Client _inner;
+
+  UserAgentClient(this.userAgent, this._inner);
+
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['user-agent'] = userAgent;
+    return _inner.send(request);
+  }
+}
+
+How to use upper class =>
+
+ http.Client client = http.Client();
+               http.Client myClient =  UserAgentClient("", client);
+            var response = await myClient.get('https://jsonplaceholder.typicode.com/todos/1');
+
+
